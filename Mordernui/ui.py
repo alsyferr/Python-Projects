@@ -195,6 +195,45 @@ def weather():
     image_icon=PhotoImage(file='Image/App1.png')
     app1.iconphoto(False,image_icon)
     
+    def getWeather():
+         try:
+            city=textfield.get()
+            
+            geolocator=Nominatim(user_agent="weather")
+            location=geolocator.geocode(city)
+            obj = TimezoneFinder()
+            result = obj.timezone_at(lng=location.longitude,lat=location.latitude)
+            print(result)
+            
+            home=pytz.timezone(result)
+            local_time=datetime.now(home)
+            current_time=local_time.strftime("%I:%M %p")
+            clock.config(text=current_time)
+            name.config(text="CURRENT WEATHER")
+            
+            #weather
+            api="https://api.openweathermap.org/data/2.5/weather?q="+city+"&appid=f8e7557a59bdc11a360454e1365e9ec4"
+            
+            json_data = requests.get(api).json()
+            condition = json_data['weather'][0]['main']
+            description = json_data['weather'][0]['description']
+            temp = int(json_data['main']['temp']-273.15)
+            pressure = json_data['main']['pressure']
+            humidity = json_data['main']['humidity']
+            wind = json_data['wind']['speed']
+            # print(json_data)
+            t.config(text=(temp,"°"))
+            c.config(text=(condition,"|","FEELS","LIKE",temp,"°"))
+            
+            w.config(text=wind)
+            h.config(text=humidity)
+            d.config(text=description)
+            p.config(text=pressure)
+         
+         except Exception as e:
+            messagebox.showerror("Weather App", "Invalid Entry!!")
+
+    
     #search box
     Search_image=PhotoImage(file="Image/search.png")
     myimage=Label(app1,image=Search_image,bg="#f4f5f5")
@@ -205,19 +244,206 @@ def weather():
     textfield.focus()
     
     Search_icon=PhotoImage(file="Image/search_icon.png")
-    myimage_icon=Button(app1,image=Search_icon,borderwidth=0,cursor='hand2',bg="#404040")
+    myimage_icon=Button(app1,image=Search_icon,borderwidth=0,cursor='hand2',bg="#404040",command=getWeather)
     myimage_icon.place(x=400,y=34)
     
     #logo
-    Logo_image=PhotoImage(file="Image/box.png")
+    Logo_image=PhotoImage(file="Image/logo.png")
+    logo=Label(app1,image=Logo_image,bg="#f4f5f5")
+    logo.place(x=150,y=100)
+    
+    #bottom box
+    Frame_image=PhotoImage(file="Image/box.png")
+    frame_myimage=Label(app1,image=Frame_image,bg="#f4f5f5")
+    frame_myimage.pack(padx=5,pady=5,side=BOTTOM)
+    
+    #time
+    name=Label(app1,font=('arial',15,'bold'),bg='#f4f5f5')
+    name.place(x=30,y=100)
+    clock=Label(app1,font=('Helvetica',20),bg="#f4f5f5")
+    clock.place(x=30,y=130)
+    
+    #label
+    label1=Label(app1,text="WIND",font=("Helvetica",15,'bold'),fg="white",bg="#1ab5ef")
+    label1.place(x=120,y=400)
+    
+    label2=Label(app1,text="HUMIDITY",font=("Helvetica",15,'bold'),fg="white",bg="#1ab5ef")
+    label2.place(x=250,y=400)
+    
+    label3=Label(app1,text="DESCRIPTION",font=("Helvetica",15,'bold'),fg="white",bg="#1ab5ef")
+    label3.place(x=430,y=400)
+    
+    label4=Label(app1,text="PRESSURE",font=("Helvetica",15,'bold'),fg="white",bg="#1ab5ef")
+    label4.place(x=650,y=400)
+    
+    t=Label(app1,font=('arial',70,'bold'),fg="#ee666d",bg='#f4f5f5')
+    t.place(x=400,y=150)
+    c=Label(app1,font=('arial',15,'bold'),bg='#f4f5f5')
+    c.place(x=400,y=250)
+    
+    w=Label(app1,text="...",font=('arial',20,'bold'),bg='#1ab5ef')
+    w.place(x=120,y=430)
+    h=Label(app1,text="...",font=('arial',20,'bold'),bg='#1ab5ef')
+    h.place(x=280,y=430)
+    d=Label(app1,text="...",font=('arial',20,'bold'),bg='#1ab5ef')
+    d.place(x=450,y=430)
+    p=Label(app1,text="...",font=('arial',20,'bold'),bg='#1ab5ef')
+    p.place(x=670,y=430)
     
     
     app1.mainloop()
 
+def clock():
+    app2=Toplevel()
+    app2.geometry("850x110+300+10")
+    app2.title('Clock')
+    app2.configure(bg="#292e2e")
+    app2.resizable(False,False)
+    
+    #icon
+    image_icon=PhotoImage(file="Image/App2.png")
+    app2.iconphoto(False,image_icon)
+    
+    def clock():
+        text=strftime('%H:%M:%S %p')
+        lb1.config(text=text)
+        lb1.after(1000,clock)
+        
+    
+    lb1=Label(app2,font=('digital-7',50,'bold'),width=20,bg="#f4f5f5",fg="#292e2e")
+    lb1.pack(anchor='center',pady=20)
+    clock()
+    
+    app2.mainloop()
+
+
+def calendar():
+    app3=Toplevel()
+    app3.geometry("300x300+-10+10")
+    app3.title('Calendar')
+    app3.configure(bg="#292e2e")
+    app3.resizable(False,False)
+    
+     #icon
+    image_icon=PhotoImage(file="Image/App3.png")
+    app3.iconphoto(False,image_icon)
+    
+    mycal=Calendar(app3,setmode='day',date_pattern='d/m/yy')
+    mycal.pack(padx=15,pady=35)
+    
+    app3.mainloop()
 
 
 
+#######################MOde###################################################
+button_mode=True
 
+def mode():
+    global button_mode
+    if button_mode:
+        LHS.config(bg="#292e2e")
+        myimage.config(bg="#292e2e")
+        l1.config(bg="#292e2e",fg="#d6d6d6")
+        l2.config(bg="#292e2e",fg="#d6d6d6")
+        l3.config(bg="#292e2e",fg="#d6d6d6")
+        l4.config(bg="#292e2e",fg="#d6d6d6")
+        l5.config(bg="#292e2e",fg="#d6d6d6")
+        l6.config(bg="#292e2e",fg="#d6d6d6")
+       
+        RHB.config(bg="#292e2e")
+        app1.config(bg="#292e2e")
+        app2.config(bg="#292e2e")
+        app3.config(bg="#292e2e")
+        app4.config(bg="#292e2e")
+        app5.config(bg="#292e2e")
+        app6.config(bg="#292e2e")
+        app7.config(bg="#292e2e")
+        app8.config(bg="#292e2e")
+        app9.config(bg="#292e2e")
+        app10.config(bg="#292e2e")
+        apps.config(bg="#292e2e",fg="#d6d6d6")
+
+        
+        button_mode=False
+    
+    else:
+        LHS.config(bg="#f4f5f5")
+        myimage.config(bg="#f4f5f5")
+        l1.config(bg="#f4f5f5",fg="#292e2e")
+        l2.config(bg="#f4f5f5",fg="#292e2e")
+        l3.config(bg="#f4f5f5",fg="#292e2e")
+        l4.config(bg="#f4f5f5",fg="#292e2e")
+        l5.config(bg="#f4f5f5",fg="#292e2e")
+        l6.config(bg="#f4f5f5",fg="#292e2e")
+        
+        RHB.config(bg="#f4f5f5")
+        app1.config(bg="#f4f5f5")
+        app2.config(bg="#f4f5f5")
+        app3.config(bg="#f4f5f5")
+        app4.config(bg="#f4f5f5")
+        app5.config(bg="#f4f5f5")
+        app6.config(bg="#f4f5f5")
+        app7.config(bg="#f4f5f5")
+        app8.config(bg="#f4f5f5")
+        app9.config(bg="#f4f5f5")
+        app10.config(bg="#f4f5f5")
+        apps.config(bg="#f4f5f5",fg="#292e2e")
+        
+        
+        button_mode=True
+
+
+def game():
+    app5=Toplevel()
+    app5.geometry("300x500+1170+170")
+    app5.title('Ludo')
+    app5.configure(bg="#dee2e5")
+    app5.resizable(False,False)
+    
+     #icon
+    image_icon=PhotoImage(file="Image/App5.png")
+    app5.iconphoto(False,image_icon)
+    
+    ludo_image=PhotoImage(file="Image/ludo back.png")
+    Label(app5,image=ludo_image).pack()
+    
+    label=Label(app5,text='',font=("times",150))
+    
+    def roll():
+        dice=['\u2680','\u2681','\u2682','\u2683','\u2684','\u2685']
+        label.configure(text=f'{random.choice(dice)}{random.choice(dice)}',fg="#29232e")
+        label.pack()
+    
+    btn_image=PhotoImage(file="Image/ludo button.png")
+    btn=Button(app5,image=btn_image,bg="#dee2e5",command=roll)
+    btn.pack(padx=10,pady=10)
+    
+    app5.mainloop()
+
+
+#######################Screenshot###################################################
+
+def screenshot():
+    root.iconify()
+    
+    myScreenshot=pyautogui.screenshot()
+    file_path=filedialog.asksaveasfilename(defaultextension='.png')
+    myScreenshot.save(file_path)
+
+
+def file():
+    subprocess.Popen(r'explorer /select,"c:\path\of\folder\file"')
+    
+def chrome():
+    wb.register('chrome',None)
+    wb.open('https://www.google.com/')
+    
+def close_apps():
+    wb.register('chrome',None)
+    wb.open('https://www.google.com/')
+    
+def close_window():
+    root.destroy()
 
 #-------------------------------------------------
 RHB=Frame(Body,width=470,height=190,bg="#f4f5f5",highlightbackground="#adacb1",highlightthickness=1)
@@ -231,39 +457,39 @@ app1=Button(RHB,image=app1_image,bd=0,command=weather)
 app1.place(x=15,y=50)
 
 app2_image=PhotoImage(file='Image/App2.png')
-app2=Button(RHB,image=app2_image,bd=0)
+app2=Button(RHB,image=app2_image,bd=0,command=clock)
 app2.place(x=100,y=50)
 
 app3_image=PhotoImage(file='Image/App3.png')
-app3=Button(RHB,image=app3_image,bd=0)
+app3=Button(RHB,image=app3_image,bd=0,command=calendar)
 app3.place(x=185,y=50)
 
 app4_image=PhotoImage(file='Image/App4.png')
-app4=Button(RHB,image=app4_image,bd=0)
+app4=Button(RHB,image=app4_image,bd=0,command=mode)
 app4.place(x=270,y=50)
 
 app5_image=PhotoImage(file='Image/App5.png')
-app5=Button(RHB,image=app5_image,bd=0)
+app5=Button(RHB,image=app5_image,bd=0,command=game)
 app5.place(x=355,y=50)
 
 app6_image=PhotoImage(file='Image/App6.png')
-app6=Button(RHB,image=app6_image,bd=0)
+app6=Button(RHB,image=app6_image,bd=0,command=screenshot)
 app6.place(x=15,y=120)
 
 app7_image=PhotoImage(file='Image/App7.png')
-app7=Button(RHB,image=app7_image,bd=0)
+app7=Button(RHB,image=app7_image,bd=0,command=file)
 app7.place(x=100,y=120)
 
 app8_image=PhotoImage(file='Image/App8.png')
-app8=Button(RHB,image=app8_image,bd=0)
+app8=Button(RHB,image=app8_image,bd=0,command=chrome)
 app8.place(x=185,y=120)
 
 app9_image=PhotoImage(file='Image/App9.png')
-app9=Button(RHB,image=app9_image,bd=0)
+app9=Button(RHB,image=app9_image,bd=0,command=close_apps)
 app9.place(x=270,y=120)
 
 app10_image=PhotoImage(file='Image/App10.png')
-app10=Button(RHB,image=app10_image,bd=0)
+app10=Button(RHB,image=app10_image,bd=0,command=close_window)
 app10.place(x=355,y=120)
 
 
