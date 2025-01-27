@@ -1,0 +1,17 @@
+		**Welcome Customer**
+
+Bill Number: 600
+Customer Name: richy 
+Customer Phone Number: 02453000111
+=====================================================Product			Quantity			Price
+=====================================================
+Bath Soap			2			$40
+Daal			3			$360
+Dew			4			$600
+-----------------------------------------------------
+Cosmetic Tax				$ 4.8 
+Grocery Tax				$ 18.0 
+Cold Drink Tax				$ 48.0 
+
+Total Bill 				$ 1070.8
+-----------------------------------------------------
